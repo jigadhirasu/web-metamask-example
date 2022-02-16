@@ -1,0 +1,21 @@
+<section class="grid">
+
+    <button mat-raised-button color="accent" (click)="login()">login</button>
+    <div>{{accounts}}</div>
+
+    <button mat-raised-button color="accent" (click)="balance()">balance</button>
+    <div>{{coin}}</div>
+
+
+    <button mat-raised-button color="accent" (click)="transaction()">transaction</button>
+    <div>
+        <mat-form-field [style]=" {'width':'360px'}" color="warn">
+            <mat-label>單位是 Wei, 1ETH = 1,000,000,000,000,000,000 Wei</mat-label>
+            <input matInput [formControl]="amount" />
+            <mat-hint>hint</mat-hint>
+            <mat-error *ngIf="amount.invalid">{{ amountError() }}</mat-error>
+        </mat-form-field>
+    </div>
+</section>
+
+<router-outlet></router-outlet>

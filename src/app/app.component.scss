@@ -1,0 +1,14 @@
+.grid {
+    background-color: grey;
+  padding: 12px;
+  display: grid;
+
+  grid-template-columns: 120px auto;
+  gap: 12px;
+}
+
+button {
+  height: 40px;
+  width: 100%;
+  place-self: center;
+}
