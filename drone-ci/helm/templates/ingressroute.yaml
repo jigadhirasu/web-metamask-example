@@ -1,11 +1,10 @@
-{{ $ns := .Release.Namespace }}
 {{- range .Values.ingressroute }}
 {{- $domain := .domain }}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ $ns }}.{{ $domain }}
+  name: metamask.{{ $domain }}
 spec:
   entryPoints:
     - websecure
@@ -17,7 +16,7 @@ spec:
         - "*.{{ $domain }}"
   routes: 
   {{- range .routes }}
-  - match: Host(`{{ $ns }}.{{ $domain }}`)
+  - match: Host(`metamask.{{ $domain }}`)
     kind: Rule
     services:
     - name: {{ .service }}
