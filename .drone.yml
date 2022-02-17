@@ -24,7 +24,7 @@ steps:
       namespace: develop
       mode: upgrade
       chart: ./drone-ci/helm
-      release: display
+      release: metamask
       api_server: "https://10.140.0.8:8443"
       kubernetes_token:
         from_secret: token
