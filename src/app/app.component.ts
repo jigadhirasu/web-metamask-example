@@ -11,9 +11,14 @@ export class AppComponent {
   accounts: string[] = [];
   coin: any;
 
+  to = new FormControl('', [
+    Validators.required,
+    Validators.pattern(/[0-9a-fA-Fx]+/),
+  ]);
+
   amount = new FormControl('', [
     Validators.required,
-    Validators.pattern('[0-9]+.?[0-9]+?[1-9]$'),
+    Validators.pattern(/([0-9]+)?.?([0-9]+)?[1-9]$/),
   ]);
 
   constructor(private metamask: MetamaskService) {}
@@ -43,6 +48,16 @@ export class AppComponent {
       .subscribe((data) => console.log(data));
   };
 
+  toError = (): string => {
+    if (this.amount.hasError('required')) {
+      return '輸入收款地址';
+    }
+
+    if (this.amount.getError('pattern')) {
+      return '請輸入有效的收款地址';
+    }
+    return '';
+  };
   amountError = (): string => {
     if (this.amount.hasError('required')) {
       return '輸入交易金額數量';

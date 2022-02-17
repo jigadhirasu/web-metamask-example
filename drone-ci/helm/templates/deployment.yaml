@@ -1,0 +1,34 @@
+{{- $release := .Release }}
+{{- $gcr := .Values.gcr }}
+{{- range .Values.deployment }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+      - env: 
+        - name: Revision
+          value: "{{ $release.Revision }}"
+        - name: Namespace
+          value: "{{ $release.Namespace }}"
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi 
+          requests:
+            cpu: 30m
+            memory: 128Mi
+        name: {{ .name }}
+        image: {{ $gcr.host }}{{ $gcr.project }}{{ .image }}
+{{- end }}

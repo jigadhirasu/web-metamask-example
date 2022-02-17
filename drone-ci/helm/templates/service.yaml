@@ -1,0 +1,18 @@
+{{- range .Values.service }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name }}
+spec:
+  selector:
+    app: {{ .selector | default .name }}
+  ports:
+  - name: {{ .name }}
+    port: {{ .port | default 80 }}
+    protocol: TCP 
+  {{- if .nodePort }}
+    nodePort: {{ .nodePort }}
+  type: NodePort
+  {{- end }}
+{{- end }}

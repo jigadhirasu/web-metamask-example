@@ -1,0 +1,33 @@
+---
+kind: pipeline
+type: kubernetes
+name: metamask-ganache
+steps:
+  - name: building
+    image: node:14.18-alpine
+    commands:
+      - npm install
+      - npm run build
+  - name: publish-gcr
+    image: plugins/gcr
+    settings:
+      dockerfile: drone-ci/Dockerfile
+      json_key:
+        from_secret: gcr_credential
+      regisstry: gcr.io
+      repo: asgame-324707/metamask
+      tags:
+        - latest
+  - name: deploy-by-helm
+    image: pelotech/drone-helm3
+    settings:
+      namespace: develop
+      mode: upgrade
+      chart: ./drone-ci/helm
+      release: display
+      api_server: "https://10.140.0.8:8443"
+      kubernetes_token:
+        from_secret: token
+      kube_certificate:
+        from_secret: ca
+      kube_service_account: asgame

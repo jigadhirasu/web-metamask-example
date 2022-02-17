@@ -1,0 +1,26 @@
+{{ $ns := .Release.Namespace }}
+{{- range .Values.ingressroute }}
+{{- $domain := .domain }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ $ns }}.{{ $domain }}
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: cf
+    domains:
+    - main: "{{ $domain }}"
+      sans: 
+        - "*.{{ $domain }}"
+  routes: 
+  {{- range .routes }}
+  - match: Host(`{{ $ns }}.{{ $domain }}`)
+    kind: Rule
+    services:
+    - name: {{ .service }}
+      port: {{ .port | default 80 }}
+  {{- end }}
+{{- end }}

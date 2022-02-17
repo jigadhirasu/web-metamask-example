@@ -1,0 +1,23 @@
+gcr:
+  host: gcr.io/
+  project: asgame-324707/
+
+# port default listen 80
+# env 額外的環境變數
+deployment:
+  - name: metamask
+
+# default port 80
+# default targetPort 17000
+# default selector is ${name}
+# nodePort is develop local connect
+service:
+  - name: metamask
+
+ingressroute:
+  - domain: asgame.xyz
+    routes:
+      - service: metamask
+        sub: metamask
+      
+ingressTCP:

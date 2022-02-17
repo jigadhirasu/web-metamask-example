@@ -1,9 +1,15 @@
 .grid {
-    background-color: grey;
   padding: 12px;
   display: grid;
 
   grid-template-columns: 120px auto;
+  grid-auto-rows: 1fr;
+  gap: 12px;
+}
+
+.table {
+  display: grid;
+  grid-template-columns: 60px auto;
   gap: 12px;
 }
 
@@ -11,4 +17,8 @@ button {
   height: 40px;
   width: 100%;
   place-self: center;
+}
+
+.center {
+  place-self: center start;
 }

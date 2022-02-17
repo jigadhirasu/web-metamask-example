@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ganache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ganache
+  template:
+    metadata:
+      labels:
+        app: ganache
+    spec:
+      volumes:
+        - name: db
+          mountPath: /tmp/ganache-db
+      containers:
+        - resources:
+            limits:
+              cpu: 100m
+              memory: 512Mi
+            requests:
+              cpu: 30m
+              memory: 128Mi
+          name: ganache
+          image: trufflesuite/ganache-cli
+          command: ["--db /var/lib/ganache"]
+          volumneMounts:
+            - name: db
+              mountPath: /var/lib/ganache
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ganache
+spec:
+  selector:
+    app: ganache
+  ports:
+    - name: ganache
+      port: 80
+      targetPort: 8545
+      protocol: TCP
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ganache.asgame.xyz
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: cf
+    domains:
+      - main: asgame.xyz
+        sans:
+          - "*.asgame.xyz"
+  routes:
+    - match: Host(`ganache.asgame.xyz`)
+      kind: Rule
+      services:
+        - name: ganache
+          port: 80
