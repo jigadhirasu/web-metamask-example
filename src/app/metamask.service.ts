@@ -58,6 +58,7 @@ export class MetamaskService {
     });
     ethereum.on('chainChanged', (chainId: string) => {
       console.log(chainId);
+      location.reload();
     });
   }
 
