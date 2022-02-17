@@ -28,7 +28,7 @@ spec:
               memory: 256Mi
           name: ganache
           image: trufflesuite/ganache-cli
-          command: ["ganache-cli", "--db /var/lib/ganache"]
+          command: ["node /app/ganache-core.docker.cli.js --db /var/lib/ganache"]
           volumeMounts:
             - name: db
               mountPath: /var/lib/ganache
