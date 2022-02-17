@@ -30,5 +30,5 @@ spec:
             cpu: 30m
             memory: 128Mi
         name: {{ .name }}
-        image: {{ $gcr.host }}{{ $gcr.project }}{{ .image }}
+        image: {{ $gcr.host }}{{ $gcr.project }}{{ .name }}
 {{- end }}
