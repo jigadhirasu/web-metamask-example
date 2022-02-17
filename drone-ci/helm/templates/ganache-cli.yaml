@@ -15,8 +15,9 @@ spec:
     spec:
       volumes:
         - name: db
-          hostPath: /tmp/ganache-db
-          type: DirectoryOrCreate
+          hostPath:
+            path: /tmp/ganache-db
+            type: DirectoryOrCreate
       containers:
         - resources:
             limits:
