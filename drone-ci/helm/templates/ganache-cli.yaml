@@ -21,11 +21,11 @@ spec:
       containers:
         - resources:
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 1
+              memory: 1024Mi
             requests:
               cpu: 200m
-              memory: 256Mi
+              memory: 512Mi
           name: ganache
           image: trufflesuite/ganache-cli
           command: ["node /app/ganache-core.docker.cli.js --db /var/lib/ganache"]
