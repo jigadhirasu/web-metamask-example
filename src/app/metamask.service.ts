@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import { keccak_256 } from 'js-sha3';
 import { from, map, Observable } from 'rxjs';
 
 const G = 1000000000;
 const ethereum = (window as any).ethereum;
+
 export interface EthRequest {
   method: string;
   params?: any;
@@ -36,6 +38,7 @@ export class MetamaskService {
   constructor() {
     console.log(ethereum);
     console.log(ethereum.isMetaMask);
+    console.log();
 
     this.request('eth_chainId').subscribe((chainId) => {
       console.log('chainId', chainId);
@@ -88,5 +91,9 @@ export class MetamaskService {
 
   request = (method: string, params?: any): Observable<any> => {
     return from(ethereum.request({ method: method, params: params }));
+  };
+
+  methodID = (f: string) => {
+    return `0x${keccak_256(f).slice(0, 8)}`;
   };
 }

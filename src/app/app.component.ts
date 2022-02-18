@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MetamaskService } from './metamask.service';
+import { NFT8878ABI } from './nft8878.abi';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,7 @@ import { MetamaskService } from './metamask.service';
 export class AppComponent {
   accounts: string[] = [];
   coin: any;
+  contractResult: any;
 
   to = new FormControl('', [
     Validators.required,
@@ -21,7 +23,13 @@ export class AppComponent {
     Validators.pattern(/([0-9]+)?.?([0-9]+)?[1-9]$/),
   ]);
 
-  constructor(private metamask: MetamaskService) {}
+  contractInput = new FormControl('', [Validators.required]);
+
+  constructor(
+    private metamask: MetamaskService // private contract: ContractService
+  ) {
+    console.log(this.metamask.methodID('MAX_SUPPLY()'));
+  }
 
   login = () => {
     this.metamask.login().subscribe((data) => (this.accounts = data));
@@ -46,6 +54,28 @@ export class AppComponent {
         (amount * G * G).toString(16)
       )
       .subscribe((data) => console.log(data));
+  };
+
+  contract = () => {
+    const params = this.contractInput.value.toString().split(' ');
+    const method = params[0];
+    const args = params.slice(1);
+
+    const abi = NFT8878ABI.filter((abi) => abi.name === method).pop();
+
+    const vars = abi?.inputs.map((i) => i.type);
+    const f = `${abi?.name}(${vars?.join(',')})`;
+    const methodID = this.metamask.methodID(f);
+
+    this.metamask
+      .request('eth_call', [
+        {
+          from: this.accounts[0],
+          to: '0x8FE290395E2242B514b36396CaEbfbccc6f72a51',
+          input: methodID,
+        },
+      ])
+      .subscribe((data) => (this.contractResult = data));
   };
 
   toError = (): string => {
