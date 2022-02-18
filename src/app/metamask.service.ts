@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core';
 import { keccak_256 } from 'js-sha3';
 import { from, map, Observable } from 'rxjs';
+import { NFT8878ABI } from './nft8878.abi';
 
 const G = 1000000000;
 const ethereum = (window as any).ethereum;
+const ethers = (window as any).ethers;
+const provider = new ethers.providers.Web3Provider(ethereum);
+const signer = provider.getSigner();
+
+const contract = new ethers.Contract('0x8FE290395E2242B514b36396CaEbfbccc6f72a51',NFT8878ABI,provider);
 
 export interface EthRequest {
   method: string;
