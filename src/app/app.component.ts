@@ -12,6 +12,8 @@ export class AppComponent {
   accounts: string[] = [];
   coin: any;
   contractResult: any;
+  signData = '';
+  verify = '';
 
   to = new FormControl('', [
     Validators.required,
@@ -22,6 +24,8 @@ export class AppComponent {
     Validators.required,
     Validators.pattern(/([0-9]+)?.?([0-9]+)?[1-9]$/),
   ]);
+
+  data = new FormControl('', [Validators.required]);
 
   contractInput = new FormControl('', [Validators.required]);
 
@@ -76,6 +80,18 @@ export class AppComponent {
         },
       ])
       .subscribe((data) => (this.contractResult = data));
+  };
+
+  personalSign = () => {
+    if (this.data.invalid) {
+      return;
+    }
+
+    this.metamask.signMessage(this.data.value).subscribe((signData) => {
+      this.signData = signData;
+
+      this.verify = this.metamask.unsignMessage(this.data.value, signData)
+    });
   };
 
   toError = (): string => {

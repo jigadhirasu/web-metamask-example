@@ -40,6 +40,17 @@
         </mat-form-field>
         <div>{{ contractResult }}</div>
     </div>
+
+    <button mat-raised-button color="accent" (click)="personalSign()">PersonalSign</button>
+    <div>
+        <mat-form-field [style]=" {'width':'360px'}" color="warn">
+            <mat-label>簽名資料</mat-label>
+            <input matInput [formControl]="data" />
+            <mat-hint>hint</mat-hint>
+        </mat-form-field>
+        <div>{{ signData }}</div>
+        <div>{{ verify }}</div>
+    </div>
 </section>
 
 <router-outlet></router-outlet>

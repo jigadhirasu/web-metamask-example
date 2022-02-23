@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { keccak_256 } from 'js-sha3';
-import { from, map, Observable } from 'rxjs';
+import { from, map, Observable, single } from 'rxjs';
 import { NFT8878ABI } from './nft8878.abi';
 
 const G = 1000000000;
@@ -9,7 +9,11 @@ const ethers = (window as any).ethers;
 const provider = new ethers.providers.Web3Provider(ethereum);
 const signer = provider.getSigner();
 
-const contract = new ethers.Contract('0x8FE290395E2242B514b36396CaEbfbccc6f72a51',NFT8878ABI,provider);
+const contract = new ethers.Contract(
+  '0x8FE290395E2242B514b36396CaEbfbccc6f72a51',
+  NFT8878ABI,
+  provider
+);
 
 export interface EthRequest {
   method: string;
@@ -93,6 +97,19 @@ export class MetamaskService {
         gas: (90000).toString(16),
       },
     ]);
+  };
+
+  signMessage = (data: string): Observable<string> => {
+    return from(signer.signMessage(data)).pipe(
+      map((signData) => (signData || '') as string)
+    );
+  };
+
+  unsignMessage = (data: string, hash: string): string => {
+    console.log(signer);
+
+    console.log(this.accounts[0]);
+    return ethers.utils.verifyMessage(data, hash);
   };
 
   request = (method: string, params?: any): Observable<any> => {
