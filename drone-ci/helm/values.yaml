@@ -1,6 +1,6 @@
 gcr:
   host: gcr.io/
-  project: asgame-324707/
+  project: stately-ally-292604/
 
 # port default listen 80
 # env 額外的環境變數
