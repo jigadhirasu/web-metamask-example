@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { keccak256 } from 'js-sha3';
 import { MetamaskService } from './metamask.service';
 import { NFT8878ABI } from './nft8878.abi';
 
@@ -87,10 +88,11 @@ export class AppComponent {
       return;
     }
 
+    console.log(keccak256.hex(this.data.value));
     this.metamask.signMessage(this.data.value).subscribe((signData) => {
       this.signData = signData;
 
-      this.verify = this.metamask.unsignMessage(this.data.value, signData)
+      this.verify = this.metamask.unsignMessage(this.data.value, signData);
     });
   };
 

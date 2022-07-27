@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
 import { keccak_256 } from 'js-sha3';
-import { from, map, Observable, single } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 import { NFT8878ABI } from './nft8878.abi';
+import { providers, Contract, utils, Bytes } from 'ethers';
+import { hashMessage } from '@ethersproject/hash/lib/message';
+import { concat, hexlify, toUtf8Bytes } from 'ethers/lib/utils';
 
 const G = 1000000000;
 const ethereum = (window as any).ethereum;
-const ethers = (window as any).ethers;
-const provider = new ethers.providers.Web3Provider(ethereum);
+// const ethers = (window as any).ethers;
+const provider = new providers.Web3Provider(ethereum);
 const signer = provider.getSigner();
 
-const contract = new ethers.Contract(
+const contract = new Contract(
   '0x8FE290395E2242B514b36396CaEbfbccc6f72a51',
   NFT8878ABI,
   provider
@@ -105,11 +108,21 @@ export class MetamaskService {
     );
   };
 
-  unsignMessage = (data: string, hash: string): string => {
-    console.log(signer);
+  unsignMessage = (message: string | Bytes, hash: string): string => {
+    console.log(message, hash);
+    console.log('!!!', hashMessage(message));
 
-    console.log(this.accounts[0]);
-    return ethers.utils.verifyMessage(data, hash);
+    if (typeof message === 'string') {
+      message = toUtf8Bytes(message);
+    }
+
+    const messagePrefix = '\x19Ethereum Signed Message:\n';
+
+    console.log(1, hexlify(toUtf8Bytes(messagePrefix)));
+    console.log(2, hexlify(toUtf8Bytes(String(message.length))));
+    console.log(3, hexlify(message));
+
+    return utils.verifyMessage(message, hash);
   };
 
   request = (method: string, params?: any): Observable<any> => {
